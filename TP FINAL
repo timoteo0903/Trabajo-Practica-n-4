@@ -1,70 +1,78 @@
 print("""----------- HOLA SOY TU SALE-MANAGER -----------""")
 print("Vas a pasar a cargar los datos de tus dias en los cuales realizaste alguna venta. ")
+
 continuar = "si"
 venta_x_dia= [ ]
+
 while continuar == "si" and continuar != "no":    
     dia = int(input("De que dia quiere cargar las ventas? "))
+    
     while dia not in range (0,24):
         dia = int(input("Inserte un dia entre 1 y 24. "))
-    print("Vamos con la primera venta del dia: ")
+    
+    print("Vamos con las ventas del dia: " + str(dia))
+    
+    contadores = [0, 0, 0]
+    ref = ["D", "C", "P"]
     respuesta = 1
-    contD = contP = contC = 0
-    contadores = [contD, contC, contP]
+    
     while respuesta != 0:
-        ventas = [ ]
         Tipo_empaque = str(input("Ingrese el tipo de empaque: 1-Individual ; 2-Caja "))
+        
         while Tipo_empaque != "1" and Tipo_empaque != "2":
             Tipo_empaque = str(input("ERROR!. Ingrese el tipo de empaque: 1-Individual ; 2-Caja "))
+
         if Tipo_empaque =="1":
             Sabor = str(input("Ingrese el sabor del cubanito: 'D'- Dulce de Leche ; 'C'-Chocolate ; 'P'- Pasta de Mani")).upper()
+            
             while Sabor != "D" and Sabor != "C" and Sabor != "P":
                 Sabor = str(input("ERROR!. Ingrese el sabor del cubanito: 'D'- Dulce de Leche ; 'C'-Chocolate ; 'P'- Pasta de Mani")).upper()
+        
         else:
             Sabor = str(input("Ingrese el sabor del cubanito: 'D'- Dulce de Leche ; 'C'-Chocolate ; 'P'- Pasta de Mani; 'M'- Mezcla ")).upper()
+            
             while Sabor != "D" and Sabor != "C" and Sabor != "P" and Sabor != "M":
                 Sabor = str(input("ERROR!. Ingrese el sabor del cubanito: 'D'- Dulce de Leche ; 'C'-Chocolate ; 'P'- Pasta de Mani;'M'- Mezcla ")).upper()
+        
         Cantidad = int(input("Ingrese la cantidad vendida: "))
         if Tipo_empaque == "1":
-            if Sabor == "D":
-                contadores[0] += Cantidad
-            elif Sabor == "C":
-                contadores[1] +=  Cantidad
-            elif Sabor == "P":
-                contadores[2] +=  Cantidad
+            contadores[ref.index(Sabor)] += Cantidad
         else:
-            if Sabor == "D":
-                contadores[0] +=  6 * Cantidad
-            elif Sabor == "C":
-                contadores[1] +=  6 * Cantidad
-            elif Sabor == "P":
-                contadores[2] +=  6 * Cantidad
-            elif Sabor == "M": 
-                for x in contadores:
-                    contadores[contadores.index(x)] += 2 * Cantidad
-        total = 0
-        for t in contadores:
-            total += t
-        for s in range(0,3):
-            if s == 0: porcentajeD = (contadores [s] / total) * 100
-            if s == 1:porcentajeC = (contadores [s] / total) * 100
-            if s == 2: porcentajeP = (contadores [s] / total) * 100
+            if Sabor == "M": 
+                for i in range(len(contadores)):
+                    contadores[i] += 2 * Cantidad
+            else:
+                contadores[ref.index(Sabor)] += 6 * Cantidad
+        
+        total = sum (contadores)
+        porcentajes = [s / total * 100 for s in contadores]
         recaudacion = total * 10
-        ventas = [dia,porcentajeC,porcentajeD,porcentajeP,recaudacion]
+        ventas = [dia] + porcentajes + [recaudacion]
         respuesta = int(input("Si desea agregar otra venta presione: 1. Si desea pasar al dia siguiente presione: 0."))
         venta_x_dia.append(ventas)
-    continuar = str(input("Desea agregar las ventas de otro dia? (si/no)")).lower()
+    
+    continuar = str(input("Desea agregar las ventas de otro dia? (si/no) ")).lower()
+    
     while continuar != "si" and continuar != "no":
-        continuar = str(input("Desea agregar las ventas de otro dia? (si/no)")).lower()
+        continuar = str(input("Desea agregar las ventas de otro dia? (si/no) ")).lower()
+
 mayor_rec = venta_x_dia [0][4]
 rec_tot = 0
+mejor_dia = venta_x_dia[0][0]
+
 for n in venta_x_dia:
     rec_dia = n[4]
     rec_tot = rec_dia + rec_tot
+    
     if len(venta_x_dia) == 1: 
         print("El dia que mas recaudo fue el dia ", dia)
+    
     else: 
+        
         if rec_dia > mayor_rec:
             mayor_rec = rec_dia 
-            mejor_dia = n[0]
-print("El dia que mas recaudo fue el dia ", str(mejor_dia) , " Y recaudo: ", str(mayor_rec))
-print("La recaudacion total del mes fue: ", str(rec_tot))
+            mejor_dia = dia
+
+print("El dia que mas recaudo fue el dia " + str(mejor_dia) + " Y recaudo: " + str(mayor_rec))
+
+print("La recaudacion total del mes fue: " + str(rec_tot))
